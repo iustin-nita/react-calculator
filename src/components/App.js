@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as math from 'mathjs';
-import { addToList, getList, isAdmin, toggleAdmin } from '../redux';
+import {
+  addToList,
+  getList,
+  isAdmin,
+  toggleAdmin,
+  updateList
+} from '../redux';
 import Screen from './Screen';
 import Button from './Button';
 import './App.css';
@@ -16,6 +22,12 @@ class App extends Component {
   searchInput = React.createRef();
 
   componentDidMount() {
+    const { updateList } = this.props;
+    const cachedList = JSON.parse(sessionStorage.getItem('list'));
+    if (cachedList) {
+      updateList(cachedList);
+    }
+
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -31,7 +43,8 @@ class App extends Component {
   }
 
   handleClick = (event) => {
-    const value = event.target.value;
+    const { value } = event.target;
+    const { addToList, list } = this.props;
     switch (value) {
       case '=':
         try {
@@ -43,7 +56,8 @@ class App extends Component {
             input: `${this.state.input} = ${result}`,
             output: result
           }
-          this.props.addToList(operation);
+          addToList(operation);
+          sessionStorage.setItem('list', JSON.stringify([...list, operation]));
         } catch (e) {
           console.log(e.message);
           this.setState({ output: 'error', input: '' });
@@ -59,11 +73,17 @@ class App extends Component {
     }
   }
 
+  clearHistory = () => {
+    sessionStorage.clear();
+    this.props.updateList([]);
+  }
+
   getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   monkeyComputes = () => {
+    const { addToList } = this.props;
     const nrOfOperations = this.getRandomInt(3, 200),
       operations = ['+', '-', '/', '*'];
     console.log('nrOfOperations', nrOfOperations);
@@ -83,7 +103,8 @@ class App extends Component {
             input: `${input1} ${randOperator} ${input2} = ${result}`,
             output: result
           }
-          this.props.addToList(operation);
+          addToList(operation);
+          sessionStorage.setItem('list', JSON.stringify(this.props.list));
         }, 50 * i);
       } catch (e) {
         console.log(e.message, input1, randOperator, input2);
@@ -147,6 +168,7 @@ class App extends Component {
               type="number"
               ref={this.searchInput}
             />
+            <button onClick={this.clearHistory}>Clear history</button>
             <ul>
               {filteredListItems}
             </ul>
@@ -163,8 +185,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+  addToList,
   toggleAdmin,
-  addToList
+  updateList
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -14,6 +14,12 @@ const reducer = (state = INITIAL_STATE, action) => {
         list: [...state.list, action.payload]
       }
     }
+    case 'UPDATE_LIST': {
+      return {
+        ...state,
+        list: action.payload
+      }
+    }
     case 'TOGGLE_ADMIN': {
       return {
         ...state,
@@ -34,6 +40,13 @@ export const addToList = (operation) =>
   ({
     type: 'ADD_COMPUTE_TO_LIST',
     payload: operation
+  });
+
+
+export const updateList = (list) =>
+  ({
+    type: 'UPDATE_LIST',
+    payload: list
   });
 
 
