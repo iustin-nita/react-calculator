@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 
 
 const reducer = (state = INITIAL_STATE, action) => {
-  console.log(state, action);
   switch (action.type) {
     case 'ADD_COMPUTE_TO_LIST': {
       return {

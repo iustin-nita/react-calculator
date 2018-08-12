@@ -9,7 +9,8 @@ import './App.css';
 class App extends Component {
   state = {
     input: '',
-    output: ''
+    output: '',
+    query: ''
   }
 
   componentDidMount() {
@@ -24,7 +25,7 @@ class App extends Component {
           const prepareInput = this.state.input.replace(/x/g, '*');
           const result = math.eval(prepareInput).toString();
           console.log(result);
-          this.setState({ output: result, input: result });
+          this.setState({ output: result });
           const operation = {
             input: `${this.state.input} = ${result}`,
             output: result
@@ -51,6 +52,7 @@ class App extends Component {
 
   monkeyComputes = (event) => {
     if (event.keyCode === 32) { //space key
+      event.preventDefault();
       const nrOfOperations = this.getRandomInt(3, 200),
         operations = ['+', '-', '/', '*'];
       console.log('nrOfOperations', nrOfOperations);
@@ -63,7 +65,7 @@ class App extends Component {
         try {
           setTimeout(() => {
             const result = math.eval(input1 + randOperator + input2).toString();
-            this.setState({ output: result, input: result });
+            this.setState({ output: result, input: input1 + randOperator + input2 });
             console.log(`${input1} ${randOperator} ${input2} = ${result}`);
             console.log(result);
             const operation = {
@@ -80,47 +82,69 @@ class App extends Component {
     }
   }
 
+  handleSearch = (event) => {
+    this.setState({ query: event.target.value })
+
+  }
+
+  toggleAdminMode = () => {
+    this.props.toggleAdmin();
+  }
+
   componentWillUnmount() {
     document.removeEventListener('keydown', this.monkeyComputes);
   }
 
   render() {
-    const { list } = this.props;
-    const listItems = list.map((item, i) => {
-      // console.log(item, i);
-      return <li key={i}>{item.input}</li>;
-    });
+    const { list, isAdmin, toggleAdmin } = this.props;
+    const filteredList = list.filter((item) =>
+      item.output.indexOf(this.state.query) !== -1
+    );
+    const filteredListItems = filteredList.map((item, i) =>
+      <li key={i}>{item.input}</li>
+    );
     return (
-      <div className="calculator" >
-        <Screen input={this.state.input} output={this.state.output} />
-        <div className="button-row">
-          <Button value={'1'} handleClick={this.handleClick} type='input' />
-          <Button value={'2'} handleClick={this.handleClick} type='input' />
-          <Button value={'3'} handleClick={this.handleClick} type='input' />
-          <Button value={'4'} handleClick={this.handleClick} type='input' />
-          <Button value={'-'} handleClick={this.handleClick} type='operation' />
-          <Button value={'+'} handleClick={this.handleClick} type='operation' />
-        </div>
-        <div className="button-row">
-          <Button value={'5'} handleClick={this.handleClick} type='input' />
-          <Button value={'6'} handleClick={this.handleClick} type='input' />
-          <Button value={'7'} handleClick={this.handleClick} type='input' />
-          <Button value={'8'} handleClick={this.handleClick} type='input' />
-          <Button value={'x'} handleClick={this.handleClick} type='operation' />
-          <Button value={'/'} handleClick={this.handleClick} type='operation' />
-        </div>
-        <div className="button-row">
-          <Button value={'9'} handleClick={this.handleClick} type='input' />
-          <Button value={'.'} handleClick={this.handleClick} type='input' />
-          <Button value={'0'} handleClick={this.handleClick} type='input' />
-          <Button value={'CE'} handleClick={this.handleClick} type='operation' />
-          <Button value={'='} handleClick={this.handleClick} type='operation' />
+      <div className="container">
+        <div className="calculator">
+          <Screen input={this.state.input} output={this.state.output} />
+          <div className="button-row">
+            <Button value={'1'} handleClick={this.handleClick} type='input' />
+            <Button value={'2'} handleClick={this.handleClick} type='input' />
+            <Button value={'3'} handleClick={this.handleClick} type='input' />
+            <Button value={'4'} handleClick={this.handleClick} type='input' />
+            <Button value={'-'} handleClick={this.handleClick} type='operation' />
+            <Button value={'+'} handleClick={this.handleClick} type='operation' />
+          </div>
+          <div className="button-row">
+            <Button value={'5'} handleClick={this.handleClick} type='input' />
+            <Button value={'6'} handleClick={this.handleClick} type='input' />
+            <Button value={'7'} handleClick={this.handleClick} type='input' />
+            <Button value={'8'} handleClick={this.handleClick} type='input' />
+            <Button value={'x'} handleClick={this.handleClick} type='operation' />
+            <Button value={'/'} handleClick={this.handleClick} type='operation' />
+          </div>
+          <div className="button-row">
+            <Button value={'9'} handleClick={this.handleClick} type='input' />
+            <Button value={'.'} handleClick={this.handleClick} type='input' />
+            <Button value={'0'} handleClick={this.handleClick} type='input' />
+            <Button value={'CE'} handleClick={this.handleClick} type='operation' />
+            <Button value={'='} handleClick={this.handleClick} type='operation' />
+          </div>
         </div>
 
-        <button onClick={this.monkeyComputes}>MONKEY</button>
-        <ul>
-          {listItems}
-        </ul>
+        <button onClick={toggleAdmin}>Admin mode</button>
+        {isAdmin &&
+          <div className="admin">
+            <input
+              placeholder="Search results..."
+              type="number"
+              onChange={this.handleSearch}
+            />
+            <ul>
+              {filteredListItems}
+            </ul>
+          </div>
+        }
       </div>
     );
   }
