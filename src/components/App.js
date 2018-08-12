@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Screen from './Screen';
 import Button from './Button';
 import './App.css';
+import * as math from 'mathjs';
 
 class App extends Component {
   state = {
@@ -14,7 +15,7 @@ class App extends Component {
     switch (value) {
       case '=':
         try {
-          const result = eval(this.state.input).toString();
+          const result = math.eval(this.state.input);
           console.log(result);
           this.setState({ output: result });
         } catch (e) {
@@ -29,6 +30,29 @@ class App extends Component {
       default:
         this.setState({ input: this.state.input += value, output: '' });
         break;
+    }
+  }
+
+  getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  monkeyComputes = () => {
+    const nrOfOperations = this.getRandomInt(3, 200),
+      operations = ['+', '-', '/', '*'];
+    console.log('nrOfOperations', nrOfOperations);
+    for (let i = 0; i <= nrOfOperations; i++) {
+      const input1 = this.getRandomInt(-9999, 9999),
+        input2 = this.getRandomInt(-9999, 9999),
+        randOperatorIndex = this.getRandomInt(0, 3),
+        randOperator = operations[randOperatorIndex];
+      try {
+        const result = math.eval(input1 + randOperator + input2);
+        console.log(`${input1} ${randOperator} ${input2} = ${result}`);
+        console.log(result);
+      } catch (e) {
+        console.log(e.message, input1, randOperator, input2);
+      }
     }
   }
 
@@ -59,6 +83,8 @@ class App extends Component {
           <Button value={'CE'} handleClick={this.handleClick} type='operation' />
           <Button value={'='} handleClick={this.handleClick} type='operation' />
         </div>
+
+        <button onClick={this.monkeyComputes}>MONKEY</button>
       </div>
     );
   }
