@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as math from 'mathjs';
+import { addToList, getList, isAdmin, toggleAdmin } from '../redux';
 import Screen from './Screen';
 import Button from './Button';
 import './App.css';
-import * as math from 'mathjs';
 
 class App extends Component {
   state = {
@@ -10,14 +12,23 @@ class App extends Component {
     output: ''
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.monkeyComputes);
+  }
+
   handleClick = (event) => {
     const value = event.target.value;
     switch (value) {
       case '=':
         try {
-          const result = math.eval(this.state.input);
+          const result = math.eval(this.state.input).toString();
           console.log(result);
-          this.setState({ output: result });
+          this.setState({ output: result, input: result });
+          const operation = {
+            input: `${this.state.input} = ${result}`,
+            output: result
+          }
+          this.props.addToList(operation);
         } catch (e) {
           console.log(e.message);
           this.setState({ output: 'error', input: '' });
@@ -28,7 +39,7 @@ class App extends Component {
         break;
 
       default:
-        this.setState({ input: this.state.input += value, output: '' });
+        this.setState({ input: this.state.input += value });
         break;
     }
   }
@@ -37,28 +48,49 @@ class App extends Component {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  monkeyComputes = () => {
-    const nrOfOperations = this.getRandomInt(3, 200),
-      operations = ['+', '-', '/', '*'];
-    console.log('nrOfOperations', nrOfOperations);
-    for (let i = 0; i <= nrOfOperations; i++) {
-      const input1 = this.getRandomInt(-9999, 9999),
-        input2 = this.getRandomInt(-9999, 9999),
-        randOperatorIndex = this.getRandomInt(0, 3),
-        randOperator = operations[randOperatorIndex];
-      try {
-        const result = math.eval(input1 + randOperator + input2);
-        console.log(`${input1} ${randOperator} ${input2} = ${result}`);
-        console.log(result);
-      } catch (e) {
-        console.log(e.message, input1, randOperator, input2);
+  monkeyComputes = (event) => {
+    if (event.keyCode === 32) { //space key
+      const nrOfOperations = this.getRandomInt(3, 200),
+        operations = ['+', '-', '/', '*'];
+      console.log('nrOfOperations', nrOfOperations);
+      for (let i = 0; i <= nrOfOperations; i++) {
+        const input1 = this.getRandomInt(-9999, 9999),
+          input2 = this.getRandomInt(-9999, 9999),
+          randOperatorIndex = this.getRandomInt(0, 3),
+          randOperator = operations[randOperatorIndex];
+
+        try {
+          setTimeout(() => {
+            const result = math.eval(input1 + randOperator + input2).toString();
+            this.setState({ output: result, input: result });
+            console.log(`${input1} ${randOperator} ${input2} = ${result}`);
+            console.log(result);
+            const operation = {
+              input: `${input1} ${randOperator} ${input2} = ${result}`,
+              output: result
+            }
+            this.props.addToList(operation);
+          }, 50 * i);
+        } catch (e) {
+          console.log(e.message, input1, randOperator, input2);
+        }
+
       }
     }
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.monkeyComputes);
+  }
+
   render() {
+    const { list } = this.props;
+    const listItems = list.map((item, i) => {
+      // console.log(item, i);
+      return <li key={i}>{item.input}</li>;
+    });
     return (
-      <div className="calculator">
+      <div className="calculator" >
         <Screen input={this.state.input} output={this.state.output} />
         <div className="button-row">
           <Button value={'1'} handleClick={this.handleClick} type='input' />
@@ -85,9 +117,22 @@ class App extends Component {
         </div>
 
         <button onClick={this.monkeyComputes}>MONKEY</button>
+        <ul>
+          {listItems}
+        </ul>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  list: getList(state),
+  isAdmin: isAdmin(state)
+});
+
+const mapDispatchToProps = {
+  toggleAdmin,
+  addToList
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
