@@ -21,7 +21,8 @@ class App extends Component {
     switch (value) {
       case '=':
         try {
-          const result = math.eval(this.state.input).toString();
+          const prepareInput = this.state.input.replace(/x/g, '*');
+          const result = math.eval(prepareInput).toString();
           console.log(result);
           this.setState({ output: result, input: result });
           const operation = {
@@ -105,7 +106,7 @@ class App extends Component {
           <Button value={'6'} handleClick={this.handleClick} type='input' />
           <Button value={'7'} handleClick={this.handleClick} type='input' />
           <Button value={'8'} handleClick={this.handleClick} type='input' />
-          <Button value={'*'} handleClick={this.handleClick} type='operation' />
+          <Button value={'x'} handleClick={this.handleClick} type='operation' />
           <Button value={'/'} handleClick={this.handleClick} type='operation' />
         </div>
         <div className="button-row">
