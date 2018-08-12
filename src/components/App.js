@@ -13,8 +13,21 @@ class App extends Component {
     query: ''
   }
 
+  searchInput = React.createRef();
+
   componentDidMount() {
-    document.addEventListener('keydown', this.monkeyComputes);
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown = (event) => {
+    if (event.keyCode === 32) { //space key
+      event.preventDefault();
+      this.monkeyComputes();
+    }
+    else if (event.keyCode === 13) { //enter key
+      event.preventDefault();
+      this.handleSearch(event);
+    }
   }
 
   handleClick = (event) => {
@@ -50,45 +63,39 @@ class App extends Component {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  monkeyComputes = (event) => {
-    if (event.keyCode === 32) { //space key
-      event.preventDefault();
-      const nrOfOperations = this.getRandomInt(3, 200),
-        operations = ['+', '-', '/', '*'];
-      console.log('nrOfOperations', nrOfOperations);
-      for (let i = 0; i <= nrOfOperations; i++) {
-        const input1 = this.getRandomInt(-9999, 9999),
-          input2 = this.getRandomInt(-9999, 9999),
-          randOperatorIndex = this.getRandomInt(0, 3),
-          randOperator = operations[randOperatorIndex];
+  monkeyComputes = () => {
+    const nrOfOperations = this.getRandomInt(3, 200),
+      operations = ['+', '-', '/', '*'];
+    console.log('nrOfOperations', nrOfOperations);
+    for (let i = 0; i <= nrOfOperations; i++) {
+      const input1 = this.getRandomInt(-9999, 9999),
+        input2 = this.getRandomInt(-9999, 9999),
+        randOperatorIndex = this.getRandomInt(0, 3),
+        randOperator = operations[randOperatorIndex];
 
-        try {
-          setTimeout(() => {
-            const result = math.eval(input1 + randOperator + input2).toString();
-            this.setState({ output: result, input: input1 + randOperator + input2 });
-            console.log(`${input1} ${randOperator} ${input2} = ${result}`);
-            console.log(result);
-            const operation = {
-              input: `${input1} ${randOperator} ${input2} = ${result}`,
-              output: result
-            }
-            this.props.addToList(operation);
-          }, 50 * i);
-        } catch (e) {
-          console.log(e.message, input1, randOperator, input2);
-        }
-
+      try {
+        setTimeout(() => {
+          const result = math.eval(input1 + randOperator + input2).toString();
+          this.setState({ output: result, input: input1 + randOperator + input2 });
+          console.log(`${input1} ${randOperator} ${input2} = ${result}`);
+          console.log(result);
+          const operation = {
+            input: `${input1} ${randOperator} ${input2} = ${result}`,
+            output: result
+          }
+          this.props.addToList(operation);
+        }, 50 * i);
+      } catch (e) {
+        console.log(e.message, input1, randOperator, input2);
       }
+
     }
   }
 
-  handleSearch = (event) => {
-    this.setState({ query: event.target.value })
-
-  }
-
-  toggleAdminMode = () => {
-    this.props.toggleAdmin();
+  handleSearch = () => {
+    const query = this.searchInput.current.value;
+    console.log(query);
+    this.setState({ query })
   }
 
   componentWillUnmount() {
@@ -96,7 +103,7 @@ class App extends Component {
   }
 
   render() {
-    const { list, isAdmin, toggleAdmin } = this.props;
+    const { isAdmin, list, toggleAdmin } = this.props;
     const filteredList = list.filter((item) =>
       item.output.indexOf(this.state.query) !== -1
     );
@@ -138,7 +145,7 @@ class App extends Component {
             <input
               placeholder="Search results..."
               type="number"
-              onChange={this.handleSearch}
+              ref={this.searchInput}
             />
             <ul>
               {filteredListItems}
