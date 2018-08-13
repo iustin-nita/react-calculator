@@ -10,7 +10,7 @@ import {
 } from '../redux';
 import Screen from './Screen';
 import Buttons from './Buttons';
-import Button from './Button';
+import Admin from './Admin';
 import './App.css';
 
 class App extends Component {
@@ -23,6 +23,7 @@ class App extends Component {
   searchInput = React.createRef();
 
   componentDidMount() {
+    // get list from sessionStorage if it exists
     const { updateList } = this.props;
     const cachedList = JSON.parse(sessionStorage.getItem('list'));
     if (cachedList) {
@@ -46,6 +47,7 @@ class App extends Component {
   handleClick = (event) => {
     const { value } = event.target;
     const { addToList, list } = this.props;
+
     switch (value) {
       case '=':
         try {
@@ -141,17 +143,11 @@ class App extends Component {
 
         <button onClick={toggleAdmin}>Admin mode</button>
         {isAdmin &&
-          <div className="admin">
-            <input
-              placeholder="Search results..."
-              type="number"
-              ref={this.searchInput}
-            />
-            <button onClick={this.clearHistory}>Clear history</button>
-            <ul>
-              {filteredListItems}
-            </ul>
-          </div>
+          <Admin
+            filteredListItems={filteredListItems}
+            searchInput={this.searchInput}
+            clearHistory={this.clearHistory}
+          />
         }
       </div>
     );
