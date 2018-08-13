@@ -9,6 +9,7 @@ import {
   updateList
 } from '../redux';
 import Screen from './Screen';
+import Buttons from './Buttons';
 import Button from './Button';
 import './App.css';
 
@@ -63,7 +64,7 @@ class App extends Component {
           this.setState({ output: 'error', input: '' });
         }
         break;
-      case 'CE':
+      case 'C':
         this.setState({ output: '', input: '' });
         break;
 
@@ -135,29 +136,7 @@ class App extends Component {
       <div className="container">
         <div className="calculator">
           <Screen input={this.state.input} output={this.state.output} />
-          <div className="button-row">
-            <Button value={'1'} handleClick={this.handleClick} type='input' />
-            <Button value={'2'} handleClick={this.handleClick} type='input' />
-            <Button value={'3'} handleClick={this.handleClick} type='input' />
-            <Button value={'4'} handleClick={this.handleClick} type='input' />
-            <Button value={'-'} handleClick={this.handleClick} type='operation' />
-            <Button value={'+'} handleClick={this.handleClick} type='operation' />
-          </div>
-          <div className="button-row">
-            <Button value={'5'} handleClick={this.handleClick} type='input' />
-            <Button value={'6'} handleClick={this.handleClick} type='input' />
-            <Button value={'7'} handleClick={this.handleClick} type='input' />
-            <Button value={'8'} handleClick={this.handleClick} type='input' />
-            <Button value={'x'} handleClick={this.handleClick} type='operation' />
-            <Button value={'/'} handleClick={this.handleClick} type='operation' />
-          </div>
-          <div className="button-row">
-            <Button value={'9'} handleClick={this.handleClick} type='input' />
-            <Button value={'.'} handleClick={this.handleClick} type='input' />
-            <Button value={'0'} handleClick={this.handleClick} type='input' />
-            <Button value={'CE'} handleClick={this.handleClick} type='operation' />
-            <Button value={'='} handleClick={this.handleClick} type='operation' />
-          </div>
+          <Buttons handleClick={this.handleClick} />
         </div>
 
         <button onClick={toggleAdmin}>Admin mode</button>

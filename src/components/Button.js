@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types'
 
 
-const Button = ({ type, handleClick, value }) => {
+const Button = ({ handleClick, value }) => {
   return (
     <input
       type="button"
-      className={type === 'operation' ? 'button operation-button' : 'button number-button'}
+      className='button'
       onClick={handleClick}
       value={value}
     />
@@ -14,7 +14,6 @@ const Button = ({ type, handleClick, value }) => {
 }
 
 Button.propTypes = {
-  type: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired
 }
