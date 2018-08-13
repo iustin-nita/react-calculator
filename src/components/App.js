@@ -141,7 +141,10 @@ class App extends Component {
           <Buttons handleClick={this.handleClick} />
         </div>
 
-        <button onClick={toggleAdmin}>Admin mode</button>
+        <button
+          className={isAdmin ? 'admin-button active' : 'admin-button'}
+          onClick={toggleAdmin}
+        >Admin mode</button>
         {isAdmin &&
           <Admin
             filteredListItems={filteredListItems}

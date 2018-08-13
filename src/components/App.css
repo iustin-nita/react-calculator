@@ -1,0 +1,70 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto+Mono';
+:root {
+  font-size: 18px; }
+
+@media only screen and (min-width: 768px) {
+  :root {
+    font-size: 24px; } }
+
+.button:focus, .button:active, input:focus, input:active, button:focus, button:active {
+  outline: none; }
+
+.container {
+  margin: 5% auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Roboto Mono';
+  font-size: 1rem; }
+
+.button {
+  width: 4rem;
+  height: 4rem;
+  font-family: 'Roboto Mono';
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer; }
+
+.calculator {
+  width: 16rem;
+  background: #a0d2d2; }
+
+.display {
+  font-size: 18px;
+  padding: 1rem;
+  border-bottom: 1px solid;
+  text-align: right; }
+  .display > div {
+    height: 25px; }
+
+.buttons {
+  background: #a0d2d2;
+  width: 16rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  float: left; }
+
+.admin-button {
+  padding: .5rem;
+  margin: .5rem 0;
+  background: none;
+  border: 1px solid;
+  cursor: pointer; }
+  .admin-button.active {
+    background: #d2ecec; }
+
+.admin {
+  padding: 1rem 0;
+  width: 20rem;
+  border: 1px solid;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  .admin input, .admin button {
+    margin: .2rem 0;
+    padding: .5rem; }

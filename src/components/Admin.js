@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 
 const Admin = ({ clearHistory, searchInput, filteredListItems }) => {
-
   return (
     <div className="admin">
       <input
@@ -12,9 +11,12 @@ const Admin = ({ clearHistory, searchInput, filteredListItems }) => {
         ref={searchInput}
       />
       <button onClick={clearHistory}>Clear history</button>
-      <ul>
-        {filteredListItems}
-      </ul>
+      {filteredListItems.length ?
+        <ul>
+          {filteredListItems}
+        </ul>
+        : <p>No items</p>
+      }
     </div>
   )
 }
