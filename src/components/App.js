@@ -53,7 +53,6 @@ class App extends Component {
         try {
           const prepareInput = this.state.input.replace(/x/g, '*');
           const result = math.eval(prepareInput).toString();
-          console.log(result);
           this.setState({ output: result });
           const operation = {
             input: `${this.state.input} = ${result}`,
@@ -62,7 +61,6 @@ class App extends Component {
           addToList(operation);
           sessionStorage.setItem('list', JSON.stringify([...list, operation]));
         } catch (e) {
-          console.log(e.message);
           this.setState({ output: 'error', input: '' });
         }
         break;
@@ -87,10 +85,12 @@ class App extends Component {
 
   monkeyComputes = () => {
     const { addToList } = this.props;
+
     const nrOfOperations = this.getRandomInt(3, 200),
       operations = ['+', '-', '/', '*'];
-    console.log('nrOfOperations', nrOfOperations);
+
     for (let i = 0; i <= nrOfOperations; i++) {
+
       const input1 = this.getRandomInt(-9999, 9999),
         input2 = this.getRandomInt(-9999, 9999),
         randOperatorIndex = this.getRandomInt(0, 3),
@@ -99,9 +99,9 @@ class App extends Component {
       try {
         setTimeout(() => {
           const result = math.eval(input1 + randOperator + input2).toString();
+
           this.setState({ output: result, input: input1 + randOperator + input2 });
-          console.log(`${input1} ${randOperator} ${input2} = ${result}`);
-          console.log(result);
+
           const operation = {
             input: `${input1} ${randOperator} ${input2} = ${result}`,
             output: result
@@ -118,7 +118,6 @@ class App extends Component {
 
   handleSearch = () => {
     const query = this.searchInput.current.value;
-    console.log(query);
     this.setState({ query })
   }
 
@@ -134,6 +133,7 @@ class App extends Component {
     const filteredListItems = filteredList.map((item, i) =>
       <li key={i}>{item.input}</li>
     );
+
     return (
       <div className="container">
         <div className="calculator">
@@ -143,8 +143,8 @@ class App extends Component {
 
         <button
           className={isAdmin ? 'admin-button active' : 'admin-button'}
-          onClick={toggleAdmin}
-        >Admin mode</button>
+          onClick={toggleAdmin}>Admin mode</button>
+
         {isAdmin &&
           <Admin
             filteredListItems={filteredListItems}

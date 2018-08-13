@@ -1,11 +1,11 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto+Mono';
 
 :root {
-	font-size: 18px;
+	font-size: 16px;
 }
 
 @media only screen and (min-width: 768px) {
-	:root { font-size: 24px }
+	:root { font-size: 22px }
 }
 
 $buttonSize: 4rem;
@@ -72,6 +72,7 @@ $background: #a0d2d2;
 
 .admin {
 	padding: 1rem 0;
+	font-size: .7rem;
 	// height: 300px;
 	width: 5 * $buttonSize;
 	border: 1px solid;
@@ -86,4 +87,7 @@ $background: #a0d2d2;
 	// li {
 	// 	list-style: none;
 	// }
+	ul {
+		width: 100%;
+	}
 }

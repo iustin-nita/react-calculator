@@ -1,10 +1,10 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto+Mono';
 :root {
-  font-size: 18px; }
+  font-size: 16px; }
 
 @media only screen and (min-width: 768px) {
   :root {
-    font-size: 24px; } }
+    font-size: 22px; } }
 
 .button:focus, .button:active, input:focus, input:active, button:focus, button:active {
   outline: none; }
@@ -59,6 +59,7 @@
 
 .admin {
   padding: 1rem 0;
+  font-size: .7rem;
   width: 20rem;
   border: 1px solid;
   overflow: auto;
@@ -68,3 +69,5 @@
   .admin input, .admin button {
     margin: .2rem 0;
     padding: .5rem; }
+  .admin ul {
+    width: 100%; }
